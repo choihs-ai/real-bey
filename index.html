@@ -263,6 +263,19 @@ const TUNE = {
   SLOWMO_WOBBLE: 0.45,    // 막판 비틀거림
   SHAKE_K: 9,             // 화면 흔들림(px per m/s)
   SHUTTER: 0.9,           // 회전 블러 셔터(1프레임 대비)
+  // 필살기 컷인(연출 전용, 물리에는 영향 없음): 팽이마다 성격에 맞는 물리 사건이 생기면 발동
+  MOVE_CD: 5,             // 같은 팽이의 필살기 최소 간격(초)
+  MOVE_MIN_GAP: 1.6,      // 화면 전체에서 컷인 사이 최소 간격(초, 겹침 방지)
+  MOVE_HAWK_SPEED: 0.5,   // 홍염 매: 맞은 뒤 벽을 따라 이 속도 이상으로 질주
+  MOVE_TURTLE_POW: 1.5,   // 강철 거북: 이 세기 이상으로 맞고도
+  MOVE_TURTLE_GAIN: 0.03, //            버스트 게이지는 이만큼도 안 오름(버텨냄)
+  MOVE_SPINDLE_RATIO: 1.35, // 은하 물레: 상대보다 RPM이 이 배수 이상 높고
+  MOVE_SPINDLE_R: 0.35,   //            가운데(이 반지름 안)를 지배
+  MOVE_SPINDLE_CD: 8,     //            (조건이 오래 이어지므로 간격을 길게)
+  MOVE_WOLF_SPEED: 0.75,  // 청람 늑대: 맞은 직후 이 속도 이상으로 튀어 나가 질주
+  MOVE_WOLF_AFTER: 1.5,   //            (맞은 뒤 이 시간 안에)
+  MOVE_FOX_STEAL: 35,     // 역풍 여우: 한 번의 충돌로 이만큼 이상 회전을 빼앗음
+  MOVE_RHINO_GAIN: 0.2,   // 파쇄 코뿔소: 한 번의 충돌로 상대 버스트 게이지를 이만큼 이상 올림
 
   PHYS_DT: 1 / 240,
 };
@@ -1135,7 +1148,7 @@ const Game = (function () {
     S.wobbleSlow = false; S.finishAt = 0; S.lastHitT = -9;
     S.flashes = []; S.stamps = []; S.lines = null; S.freezeUntil = 0; S.combo = { n: 0, t: -9 };
     S.snaps = []; S.recEv = []; S.replay = null; S.replayDone = false; S.finishInfo = null; S.finishPos = null;
-    S.crisis = [false, false]; S.danger = 0; S.nextBeat = 0; S.rushCD = [-9, -9]; S.rushUntil = [0, 0]; S.cutin = null;
+    S.crisis = [false, false]; S.danger = 0; S.nextBeat = 0; S.rushCD = [-9, -9]; S.rushUntil = [0, 0]; S.rushColor = ['255,200,60', '255,200,60']; S.cutin = null;
     S.landed = [false, false]; S.zoomTarget = 1; S.pocketGlow = null; cam.zbase = 1; cam.kick = 0;
     { // 매치 포인트
       const can = [0, 1].map(i => S.score[i] + 2 >= S.target);
@@ -1282,18 +1295,41 @@ const Game = (function () {
     if (p > 0.7 && !S.world.pending) slow(0.35, 0.3);
   }
 
-  // 필살기: 맞고 튕겨 나간 팽이가 기울어진 채 벽을 따라 질주할 때(물리에서 저절로 생김)
-  function checkRush(w) {
-    if (S.replay || w.t < 2.5 || S.phase !== 'battle' || S.stamps.length) return;
+  // 필살기: 팽이마다 성격에 맞는 물리 사건이 생기면 컷인(버튼이 아니라 상태로 감지)
+  //  홍염 매  : 맞은 뒤 기울어진 채 벽을 따라 질주      강철 거북: 세게 맞고도 버텨냄
+  //  은하 물레: 상대보다 훨씬 빨리 돌며 가운데를 지배    청람 늑대: 맞고 튕겨 나가 전속력 질주
+  //  역풍 여우: 회전을 크게 빼앗음                      파쇄 코뿔소: 한 방에 상대 락을 크게 흔듦
+  function hex(c) { return [1, 3, 5].map(k => parseInt(c.slice(k, k + 2), 16)).join(','); }
+  function fireMove(o, why) {
+    if (S.replay || S.phase !== 'battle' || S.world.pending || S.wall - S.rushCD[o.side] < (o.def.id === 'spindle' ? T.MOVE_SPINDLE_CD : T.MOVE_CD)) return;
+    if (S.cutin && S.wall - S.cutin.t0 < T.MOVE_MIN_GAP) return;
+    S.rushCD[o.side] = S.wall; S.rushUntil[o.side] = S.wall + 2.2; S.rushColor[o.side] = hex(o.def.c1);
+    S.cutin = { side: o.side, def: o.def, t0: S.wall, why };
+    Sound.shing(); Sound.whoosh(o.x / R); slow(0.45, 0.6); kick(0.05);
+  }
+  function moveOnHit(ev) { // 충돌 순간에 판정하는 필살기
+    const w = S.world, g = [ev.ga, ev.gb];
     for (const o of w.tops) {
-      if (!o || o.state !== 'spin' || S.wall - S.lastHitT > 2 || S.wall - S.rushCD[o.side] < 5) continue;
-      const r = Math.hypot(o.x, o.y), sp = Math.hypot(o.vx, o.vy);
-      if (sp < 0.5 || r < 0.4 * R) continue;
-      const vr = (o.vx * o.x + o.vy * o.y) / r;
-      if (Math.abs(vr) / sp > 0.8) continue; // 벽을 따라(접선 방향으로) 달릴 때만
-      S.rushCD[o.side] = S.wall; S.rushUntil[o.side] = S.wall + 2.2;
-      S.cutin = { side: o.side, def: o.def, t0: S.wall };
-      Sound.shing(); Sound.whoosh(o.x / R); slow(0.45, 0.6); kick(0.05);
+      if (!o || o.state !== 'spin') continue;
+      const id = o.def.id, mine = g[o.side], theirs = g[1 - o.side];
+      if (id === 'turtle' && ev.power > T.MOVE_TURTLE_POW && mine < T.MOVE_TURTLE_GAIN) fireMove(o, '버텨냈다');
+      else if (id === 'fox' && ev.steal > T.MOVE_FOX_STEAL) fireMove(o, '회전 탈취');
+      else if (id === 'rhino' && theirs > T.MOVE_RHINO_GAIN) fireMove(o, '락 붕괴');
+    }
+  }
+  function checkRush(w) { // 매 프레임 상태로 판정하는 필살기
+    if (S.replay || w.t < 2.5 || S.phase !== 'battle') return;
+    for (const o of w.tops) {
+      if (!o || o.state !== 'spin') continue;
+      const id = o.def.id, r = Math.hypot(o.x, o.y), sp = Math.hypot(o.vx, o.vy), opp = w.tops[1 - o.side];
+      if (id === 'hawk' || id === 'wolf') {
+        if (S.wall - S.lastHitT > (id === 'hawk' ? 2 : T.MOVE_WOLF_AFTER) || r < (id === 'hawk' ? 0.4 : 0.25) * R) continue;
+        if (sp < (id === 'hawk' ? T.MOVE_HAWK_SPEED : T.MOVE_WOLF_SPEED)) continue;
+        if (id === 'hawk') { const vr = (o.vx * o.x + o.vy * o.y) / r; if (Math.abs(vr) / sp > 0.8) continue; } // 벽을 따라(접선) 달릴 때만
+        fireMove(o, id === 'hawk' ? '벽타기' : '전속력');
+      } else if (id === 'spindle') {
+        if (opp && opp.state === 'spin' && Math.abs(o.w) > T.MOVE_SPINDLE_RATIO * Math.abs(opp.w) && r < T.MOVE_SPINDLE_R * R && w.t - o.t0 > 5) fireMove(o, '지배');
+      }
     }
   }
 
@@ -1308,7 +1344,7 @@ const Game = (function () {
           Sound.clang(p, pan, ev.same);
           sparks(ev.x, ev.y, Math.round(4 + p * 46), p, ev.nx, ev.ny);
           addShake(ev.power * T.SHAKE_K * 0.5);
-          S.lastHitT = S.wall;
+          S.lastHitT = S.wall; moveOnHit(ev);
           if (p > 0.45) bigHit(ev, p, pan);
           else if (p > 0.25) ring(ev.x, ev.y, 0.04, 'rgba(255,220,140,', 0.25);
         } else if (ev.steal > 1.2 && Math.random() < 0.15) sparks(ev.x, ev.y, 3, 0.1, ev.nx, ev.ny, '#9fe0ff');
@@ -1680,7 +1716,8 @@ const Game = (function () {
     const [x, y] = w2s(o.x, o.y), rr = o.r * k * (1.9 + 0.25 * Math.sin(S.wall * 30));
     ctx.globalCompositeOperation = 'lighter';
     const g = ctx.createRadialGradient(x, y, rr * 0.3, x, y, rr);
-    g.addColorStop(0, `rgba(255,220,90,${0.55 * left})`); g.addColorStop(0.6, `rgba(255,140,40,${0.25 * left})`); g.addColorStop(1, 'rgba(255,100,0,0)');
+    const rc = S.rushColor[o.side];
+    g.addColorStop(0, `rgba(${rc},${0.6 * left})`); g.addColorStop(0.6, `rgba(${rc},${0.28 * left})`); g.addColorStop(1, `rgba(${rc},0)`);
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, rr, 0, TAU); ctx.fill();
     ctx.globalCompositeOperation = 'source-over';
   }
