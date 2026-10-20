@@ -266,6 +266,7 @@ const TUNE = {
   // 필살기 컷인(연출 전용, 물리에는 영향 없음): 팽이마다 성격에 맞는 물리 사건이 생기면 발동
   MOVE_CD: 5,             // 같은 팽이의 필살기 최소 간격(초)
   MOVE_MIN_GAP: 1.6,      // 화면 전체에서 컷인 사이 최소 간격(초, 겹침 방지)
+  MOVE_MIN_T: 2.0,        // 발사 직후 이 시간(초) 동안은 안 나옴("고 슛!" 문구와 겹침 방지)
   MOVE_HAWK_SPEED: 0.5,   // 홍염 매: 맞은 뒤 벽을 따라 이 속도 이상으로 질주
   MOVE_TURTLE_POW: 1.5,   // 강철 거북: 이 세기 이상으로 맞고도
   MOVE_TURTLE_GAIN: 0.03, //            버스트 게이지는 이만큼도 안 오름(버텨냄)
@@ -1309,6 +1310,7 @@ const Game = (function () {
   }
   function moveOnHit(ev) { // 충돌 순간에 판정하는 필살기
     const w = S.world, g = [ev.ga, ev.gb];
+    if (w.t < T.MOVE_MIN_T) return;
     for (const o of w.tops) {
       if (!o || o.state !== 'spin') continue;
       const id = o.def.id, mine = g[o.side], theirs = g[1 - o.side];
@@ -1318,7 +1320,7 @@ const Game = (function () {
     }
   }
   function checkRush(w) { // 매 프레임 상태로 판정하는 필살기
-    if (S.replay || w.t < 2.5 || S.phase !== 'battle') return;
+    if (S.replay || w.t < T.MOVE_MIN_T || S.phase !== 'battle') return;
     for (const o of w.tops) {
       if (!o || o.state !== 'spin') continue;
       const id = o.def.id, r = Math.hypot(o.x, o.y), sp = Math.hypot(o.vx, o.vy), opp = w.tops[1 - o.side];
