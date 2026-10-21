@@ -200,12 +200,13 @@ const TUNE = {
 
   // ── 경기장(그릇) ──
   STADIUM_R: 0.20,        // 반지름 20cm
-  FLAT_R: 0.055,          // 가운데 평평한 구역 반지름
-  SLOPE_CENTER: 0.10,     // 평평 구역 끝의 경사(tan)
+  FLAT_R: 0.035,          // 가운데 오목한 접시 구역 반지름(여기까지 완만한 포물선, 바닥 기울기 0→SLOPE_CENTER)
+  PLATE_R: 0.055,         // 화면에 그리는 하얀 바닥판 반지름(보이는 모양만, 물리와 무관)
+  SLOPE_CENTER: 0.25,     // 평평 구역 끝의 경사(tan)
   SLOPE_EDGE: 1.35,       // 가장자리 경사(tan) — 클수록 벽이 가파름
   SLOPE_POW: 3.0,         // 경사 증가 곡선(클수록 가운데 평평·가장자리 급경사)
   POCKETS_DEG: [45, 135, 225, 315], // 오버 구멍 위치(화면 기준, 0°=오른쪽, 90°=아래)
-  POCKET_HALF_DEG: 21,    // 오버 구멍 반폭
+  POCKET_HALF_DEG: 27,    // 오버 구멍 반폭
   POCKET_R: 0.95,         // 구멍 구역에서 팽이 중심이 이 반지름(경기장 비율)을 넘으면 오버
   OVER_WALL_VR: 2.6,      // 벽 위로 넘어가 버리는 바깥 방향 속도
   WALL_E: 0.42,           // 벽 반발
@@ -221,8 +222,8 @@ const TUNE = {
   // 축(드라이버)별 마찰은 아래 TIPS 참고
 
   // ── 회전 감쇠 ──
-  DECAY_A: 27,            // 축 끝 마찰에 의한 감쇠(rad/s²)
-  DECAY_C: 3.2e-5,        // 공기저항(∝ω²)
+  DECAY_A: 21,            // 축 끝 마찰에 의한 감쇠(rad/s²)
+  DECAY_C: 2.4e-5,        // 공기저항(∝ω²)
   TILT_DRAG: 2.5,         // 기울면 감쇠 증가
 
   // ── 세차운동·쓰러짐 ──
@@ -247,7 +248,7 @@ const TUNE = {
   // ── 버스트 ──
   BURST_N: 1.0,           // 정면 충격 → 버스트 데미지
   BURST_T: 0.55,          // 회전 반대로 비트는 충격 → 버스트 데미지
-  BURST_GAIN: 0.047,       // 문턱을 넘은 데미지가 게이지로 쌓이는 비율
+  BURST_GAIN: 0.025,       // 문턱을 넘은 데미지가 게이지로 쌓이는 비율
   BURST_LOCK_MIN: 0.12,   // 회전이 느려지면 락이 약해짐(최소 비율)
   BURST_LOCK_W: 650,      // 이 각속도 이상이면 락 최대
   BURST_LOCK_POW: 2,    // 락이 약해지는 곡선
@@ -267,8 +268,8 @@ const TUNE = {
   MOVE_CD: 5,             // 같은 팽이의 필살기 최소 간격(초)
   MOVE_MIN_GAP: 1.6,      // 화면 전체에서 컷인 사이 최소 간격(초, 겹침 방지)
   MOVE_MIN_T: 2.0,        // 발사 직후 이 시간(초) 동안은 안 나옴("고 슛!" 문구와 겹침 방지)
-  MOVE_HAWK_SPEED: 0.5,   // 홍염 매: 맞은 뒤 벽을 따라 이 속도 이상으로 질주
-  MOVE_TURTLE_POW: 1.2,   // 강철 거북: 이 세기 이상으로 맞고도
+  MOVE_HAWK_SPEED: 0.7,   // 홍염 매: 맞은 뒤 벽을 따라 이 속도 이상으로 질주
+  MOVE_TURTLE_POW: 1.75,   // 강철 거북: 이 세기 이상으로 맞고도
   MOVE_TURTLE_GAIN: 0.03, //            버스트 게이지는 이만큼도 안 오름(버텨냄)
   MOVE_SPINDLE_RATIO: 1.35, // 은하 물레: 상대보다 RPM이 이 배수 이상 높고
   MOVE_SPINDLE_R: 0.35,   //            가운데(이 반지름 안)를 지배
@@ -276,7 +277,7 @@ const TUNE = {
   MOVE_WOLF_SPEED: 0.75,  // 청람 늑대: 맞은 직후 이 속도 이상으로 튀어 나가 질주
   MOVE_WOLF_AFTER: 1.5,   //            (맞은 뒤 이 시간 안에)
   MOVE_FOX_STEAL: 10,     // 역풍 여우: 한 번의 충돌로 이만큼 이상 회전을 빼앗음
-  MOVE_RHINO_GAIN: 0.2,   // 파쇄 코뿔소: 한 번의 충돌로 상대 버스트 게이지를 이만큼 이상 올림
+  MOVE_RHINO_GAIN: 0.14,   // 파쇄 코뿔소: 한 번의 충돌로 상대 버스트 게이지를 이만큼 이상 올림
 
   PHYS_DT: 1 / 240,
 };
@@ -344,27 +345,27 @@ const Core = (function () {
   // wcrit: 이 각속도 아래로 떨어지면 비틀거림 시작 / air: 공기저항 배율
   const BEYS = [
     { id: 'hawk', move: '홍염 급강하', name: '홍염 매', type: '공격', spin: 1, mass: 0.05, radius: 0.025, ik: 0.56, blades: 3, shape: 'hook',
-      atk: 2.2, cmu: 0.30, rest: 0.55, bres: 1.35, batk: 1.0, wcrit: 135, air: 1.15, tip: 'rubber',
+      atk: 2.5, cmu: 0.30, rest: 0.55, bres: 1.4, batk: 1.0, wcrit: 135, air: 1.15, tip: 'rubber',
       c1: '#ff4d2e', c2: '#ffb02e', c3: '#6a1206', glyph: 'flame',
       desc: '러버 축으로 경기장을 휘젓고 갈고리 날로 강타. 지구력은 짧다.' },
     { id: 'turtle', move: '강철 방패 돌진', name: '강철 거북', type: '방어', spin: 1, mass: 0.055, radius: 0.0245, ik: 0.56, blades: 6, shape: 'round',
-      atk: 0.40, cmu: 0.16, rest: 0.25, bres: 1.8, batk: 0.8, wcrit: 120, air: 0.9, tip: 'ball',
+      atk: 0.40, cmu: 0.16, rest: 0.28, bres: 1.45, batk: 0.8, wcrit: 120, air: 0.9, tip: 'ball',
       c1: '#3fb37a', c2: '#a7f0c4', c3: '#0b3a24', glyph: 'hex',
       desc: '무겁고 둥근 몸통. 충격을 흘려 받고 가운데를 지킨다.' },
     { id: 'spindle', move: '은하 소용돌이', name: '은하 물레', type: '지구력', spin: 1, mass: 0.047, radius: 0.026, ik: 0.53, blades: 2, shape: 'wing',
-      atk: 0.40, cmu: 0.20, rest: 0.45, bres: 0.95, batk: 0.8, wcrit: 95, air: 0.95, tip: 'needle',
+      atk: 0.40, cmu: 0.20, rest: 0.45, bres: 1.6, batk: 0.8, wcrit: 95, air: 0.95, tip: 'needle',
       c1: '#a98bff', c2: '#e3d9ff', c3: '#2a1a66', glyph: 'star',
       desc: '테가 무거운 날개 + 니들 축. 가운데서 끝까지 버틴다.' },
     { id: 'wolf', move: '청람 송곳니 질주', name: '청람 늑대', type: '밸런스', spin: 1, mass: 0.051, radius: 0.025, ik: 0.6, blades: 4, shape: 'fang',
-      atk: 0.95, cmu: 0.25, rest: 0.48, bres: 1.45, batk: 1.0, wcrit: 115, air: 1.0, tip: 'semi',
+      atk: 0.9, cmu: 0.25, rest: 0.48, bres: 1.25, batk: 1.0, wcrit: 115, air: 1.0, tip: 'semi',
       c1: '#2f8cff', c2: '#9fd4ff', c3: '#0a2a5c', glyph: 'fang',
       desc: '공격·방어·지구력 모두 고르게. 세미플랫 축.' },
     { id: 'fox', move: '역풍 회오리', name: '역풍 여우', type: '흡수형', spin: -1, mass: 0.049, radius: 0.025, ik: 0.6, blades: 3, shape: 'swept',
-      atk: 0.75, cmu: 0.42, rest: 0.45, bres: 1.35, batk: 1.0, wcrit: 110, air: 1.05, tip: 'ball',
+      atk: 0.85, cmu: 0.42, rest: 0.45, bres: 1.5, batk: 1.0, wcrit: 110, air: 1.05, tip: 'ball',
       c1: '#ffcf3a', c2: '#fff1b0', c3: '#6a4a00', glyph: 'tail',
       desc: '왼쪽으로 돈다. 오른회전과 맞닿으면 회전을 빼앗아 온다.' },
     { id: 'rhino', move: '파쇄 돌격', name: '파쇄 코뿔소', type: '버스트형', spin: 1, mass: 0.053, radius: 0.0255, ik: 0.55, blades: 2, shape: 'horn',
-      atk: 1.2, cmu: 0.28, rest: 0.60, bres: 1.1, batk: 1.7, wcrit: 125, air: 1.1, tip: 'flat',
+      atk: 1.2, cmu: 0.28, rest: 0.60, bres: 1.1, batk: 1.5, wcrit: 125, air: 1.1, tip: 'flat',
       c1: '#c0c7d6', c2: '#ffffff', c3: '#2c3240', glyph: 'horn',
       desc: '두 개의 뿔이 락을 비틀어 버스트를 노린다. 대신 자기도 잘 터진다.' },
   ];
@@ -1036,7 +1037,7 @@ const Game = (function () {
       g.strokeStyle = `rgba(255,255,255,${0.025 + 0.035 * i / 14})`; g.beginPath(); g.arc(0, 0, lo * k, 0, TAU); g.stroke();
     }
     // 가운데 평평한 구역
-    const fr = T.FLAT_R * k;
+    const fr = T.PLATE_R * k;
     // 밝은 바닥판(평평한 구역) — 팽이가 가운데에 모이는 게 잘 보이게
     g.save(); g.shadowColor = 'rgba(0,0,0,.6)'; g.shadowBlur = fr * 0.25;
     const cg = g.createRadialGradient(-fr * 0.3, -fr * 0.3, 0, 0, 0, fr * 1.05);
