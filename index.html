@@ -142,19 +142,20 @@ button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
 <div class="screen on" id="scrTitle">
   <h1>리얼 팽이 배틀</h1>
   <p class="tag">쏘는 건 손가락, 싸우는 건 물리. 런처를 당긴 다음엔 손을 떼고 지켜보세요.<br>버스트 2점 · 오버 1점 · 스핀 1점</p>
-  <div class="row">
-    <button class="btn main" data-mode="2p">2P 대전 (한 기기)</button>
-    <button class="btn main" data-mode="ai">VS AI</button>
-    <button class="btn main" data-mode="ffa">4인 대난투 (한 기기)</button>
-  </div>
-  <div class="row seg">목표 점수
+  <div class="row seg">인원
+    <button class="btn" data-count="2">2명</button><button class="btn" data-count="3">3명</button><button class="btn" data-count="4">4명</button>
+    <span style="width:14px"></span>목표 점수
     <button class="btn" data-target="4">4점</button><button class="btn" data-target="7">7점</button>
+  </div>
+  <div class="row">
+    <button class="btn main" data-mode="multi" id="btnMulti">2인 대전 (한 기기)</button>
+    <button class="btn main" data-mode="ai">VS AI</button>
   </div>
   <div class="howto">
     <b>발사:</b> 내 쪽 화면(왼쪽 P1 / 오른쪽 P2)에 손가락을 대고 기다리다가 <b>“3, 2, 1, 고 슛!”</b>에 맞춰 바깥쪽으로 <b>확</b> 당기세요.
     빠르게 당길수록 RPM이 높고, 손가락을 댄 자리가 착지 위치입니다. 너무 일찍 당기면 부정 출발(약발사).<br>
-    <b>4인 대난투:</b> 화면 네 귀퉁이가 각자의 구역입니다(P1 왼쪽 위 · P2 오른쪽 위 · P3 왼쪽 아래 · P4 오른쪽 아래). 한 팽이만 남을 때까지 싸우고,
-    버스트로 쓰러뜨리면 +2, 오버로 떨구면 +1, 마지막까지 살아남으면 +2점입니다.
+    <b>3~4명 대난투:</b> 위에서 인원을 고르면, 화면 귀퉁이가 각자의 구역이 됩니다(P1 왼쪽 위 · P2 오른쪽 위 · P3 왼쪽 아래 · P4 오른쪽 아래). 한 팽이만 남을 때까지 싸우고,
+    버스트로 쓰러뜨리면 +2, 오버로 떨구면 +1, 마지막까지 살아남으면 +2점입니다. 2명이면 왼쪽/오른쪽 1대1입니다.
   </div>
   <div class="foot">오리지널 팽이·경기장 / 외부 라이브러리 없음 / 오프라인 작동</div>
 </div>
@@ -1019,7 +1020,7 @@ const Game = (function () {
   const finCause = f => f.type === 'ffa' ? f.cause : f.type;
 
   const S = {
-    n: 2, mode: 'ai', target: 4, picks: [null, null], human: [true, false],
+    n: 2, count: 2, mode: 'ai', target: 4, picks: [null, null], human: [true, false],
     phase: 'menu', world: null, score: [0, 0], round: 0, log: [],
     timeScale: 1, slowUntil: 0, slowTarget: 1, wall: 0, // 실시간(초)
     goAt: 0, countStart: 0, launched: [false, false], pullInfo: [null, null], aiPlans: [null, null],
@@ -1168,7 +1169,7 @@ const Game = (function () {
     }
   }
   function startSelect() {
-    selStep = 0; S.picks = Array(S.mode === 'ffa' ? 4 : 2).fill(null); selCur = null; buildGrid(); updateSelTitle(); show('scrSelect');
+    selStep = 0; S.picks = Array(S.mode === 'ffa' ? S.count : 2).fill(null); selCur = null; buildGrid(); updateSelTitle(); show('scrSelect');
   }
   function updateSelTitle() {
     const who = S.mode === 'ffa' ? `P${selStep + 1}(${QNAME[selStep]})` : S.mode === 'watch' ? (selStep === 0 ? 'AI 1(왼쪽)' : 'AI 2(오른쪽)') : selStep === 0 ? 'P1(왼쪽)' : 'P2(오른쪽)';
@@ -1189,9 +1190,9 @@ const Game = (function () {
 
   // ── 경기 ──
   function startMatch() {
-    S.n = S.mode === 'ffa' ? 4 : 2;
+    S.n = S.mode === 'ffa' ? S.count : 2;
     S.score = Array(S.n).fill(0); S.round = 0; S.log = [];
-    S.human = S.mode === 'ffa' ? [true, true, true, true] : [S.mode !== 'watch', S.mode === '2p'];
+    S.human = S.mode === 'ffa' ? Array(S.n).fill(true) : [S.mode !== 'watch', S.mode === '2p'];
     Core.setPockets(S.n > 2 ? T.POCKETS_DEG_FFA : T.POCKETS_DEG, S.n > 2 ? T.POCKET_HALF_DEG_FFA : T.POCKET_HALF_DEG);
     layout(); // 4인이면 패널 배치와 경기장 그림(구멍 위치)을 다시 만듦
     show(null); setHud(true);
@@ -1232,7 +1233,7 @@ const Game = (function () {
     touches.clear();
     S.phase = 'ready'; S.phaseT = S.wall;
     if (!S.human.some(Boolean)) startCountdown();
-    else message(`ROUND ${S.round}`, n > 2 ? '네 명 모두 자기 구역(화면 네 귀퉁이)에 손가락을 대세요' : S.human[1] ? '두 사람 모두 자기 쪽 화면에 손가락을 대세요' : `${sideName(0)} 화면에 손가락을 대고 기다리세요`);
+    else message(`ROUND ${S.round}`, n > 2 ? `${n}명 모두 자기 구역(화면 귀퉁이)에 손가락을 대세요` : S.human[1] ? '두 사람 모두 자기 쪽 화면에 손가락을 대세요' : `${sideName(0)} 화면에 손가락을 대고 기다리세요`);
   }
   function sideName(i) { return S.n > 2 ? QNAME[i] : portrait ? (i ? '위쪽' : '아래쪽') : (i ? '오른쪽' : '왼쪽'); }
   function needTouches() { return Array.from({ length: S.n }, (_, i) => i).filter(i => S.human[i]); }
@@ -1967,7 +1968,18 @@ const Game = (function () {
 
   // ── 버튼 ──
   function bind() {
-    for (const b of document.querySelectorAll('[data-mode]')) b.onclick = () => { Sound.unlock(); S.mode = b.dataset.mode; startSelect(); };
+    try { const c = +localStorage.getItem('rb.count'); if (c >= 2 && c <= 4) S.count = c; } catch (_) { }
+    const cbtn = document.querySelectorAll('[data-count]');
+    const markC = () => { // 인원 선택 표시와 버튼 문구
+      cbtn.forEach(x => x.classList.toggle('sel', +x.dataset.count === S.count));
+      $('btnMulti').textContent = S.count === 2 ? '2인 대전 (한 기기)' : `${S.count}인 대난투 (한 기기)`;
+    };
+    cbtn.forEach(b => b.onclick = () => { S.count = +b.dataset.count; try { localStorage.setItem('rb.count', S.count); } catch (_) { } markC(); }); markC();
+    for (const b of document.querySelectorAll('[data-mode]')) b.onclick = () => {
+      Sound.unlock();
+      S.mode = b.dataset.mode === 'multi' ? (S.count > 2 ? 'ffa' : '2p') : b.dataset.mode; // 2명이면 1대1, 3~4명이면 대난투
+      startSelect();
+    };
     const tbtn = document.querySelectorAll('[data-target]');
     const markT = () => tbtn.forEach(x => x.classList.toggle('sel', +x.dataset.target === S.target));
     tbtn.forEach(b => b.onclick = () => { S.target = +b.dataset.target; markT(); }); markT();
