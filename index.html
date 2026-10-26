@@ -305,7 +305,7 @@ const TUNE = {
   MOVE_VALKYRIE_SPEED: 1.0,   // 갓 발키리: 맞은 직후 이 속도 이상으로 튀어 나가 질주
   MOVE_VALKYRIE_AFTER: 1.0,   //            (맞은 뒤 이 시간 안에)
   MOVE_FAFNIR_STEAL: 2,     // 드레인 파브닐: 한 번의 충돌로 이만큼 이상 회전을 빼앗음
-  MOVE_LONGINUS_GAIN: 0.065,   // 나이트메어 롱기누스: 한 번의 충돌로 상대 버스트 게이지를 이만큼 이상 올림
+  MOVE_LONGINUS_GAIN: 0.08,   // 나이트메어 롱기누스: 한 번의 충돌로 상대 버스트 게이지를 이만큼 이상 올림
 
   PHYS_DT: 1 / 240,
 };
@@ -406,7 +406,7 @@ const Core = (function () {
       c1: '#e0a81c', c2: '#fff0a0', c3: '#6a4a00', acc: '#2a3d94', gem: '#2fc77a', ui: '#ffd23f', glyph: 'tail',
       desc: '스태미나 타입. 왼회전, 고무 F 날이 오른회전 상대의 회전을 빨아들인다.' },
     { id: 'longinus', move: '나이트메어 롱기누스', name: '나이트메어 롱기누스', en: 'Nightmare Longinus', no: 'B-97', type: '공격', spin: -1,
-      parts: { layer: '나이트메어 롱기누스', disc: '디스크 일체형', driver: '디스트로이 (Ds)' }, wt: null,
+      parts: { layer: '나이트메어 롱기누스', disc: '레이어 일체형', driver: '디스트로이 (Ds)' }, wt: null,
       mass: 0.053, radius: 0.0255, ik: 0.55, blades: 2,
       atk: 1.453, cmu: 0.094, rest: 0.60, bres: 0.982, batk: 1.57, wcrit: 136, air: 1.1, tip: 'flat',
       c1: '#c7ceda', c2: '#ffffff', c3: '#434b5e', acc: '#2f78ff', gem: '#2f9bff', mag: '#c0308a', ui: '#dfe6f2', glyph: 'horn',
