@@ -373,29 +373,29 @@ const Core = (function () {
   // cmu: 접촉면 마찰(회전 빼앗기) / rest: 반발 / bres: 버스트 내성 / batk: 상대 버스트 유발 배율
   // wcrit: 이 각속도 아래로 떨어지면 비틀거림 시작 / air: 공기저항 배율
   const BEYS = [
-    { id: 'hawk', move: '홍염 급강하', name: '홍염 매', type: '공격', spin: 1, mass: 0.05, radius: 0.025, ik: 0.56, blades: 3, shape: 'hook',
+    { id: 'hawk', move: '홍염 급강하', name: '홍염 매', type: '공격', spin: 1, mass: 0.05, radius: 0.025, ik: 0.56, blades: 3,
       atk: 2.5, cmu: 0.30, rest: 0.55, bres: 1.4, batk: 1.0, wcrit: 135, air: 1.15, tip: 'rubber',
-      c1: '#ff4d2e', c2: '#ffb02e', c3: '#6a1206', glyph: 'flame',
+      c1: '#d8281c', c2: '#ff8a5c', c3: '#4a0806', acc: '#f6c453', gem: '#35b6ff', ui: '#ff7a2e', glyph: 'flame',
       desc: '러버 축으로 경기장을 휘젓고 갈고리 날로 강타. 지구력은 짧다.' },
-    { id: 'turtle', move: '강철 방패 돌진', name: '강철 거북', type: '방어', spin: 1, mass: 0.055, radius: 0.0245, ik: 0.545, blades: 6, shape: 'round',
+    { id: 'turtle', move: '강철 방패 돌진', name: '강철 거북', type: '방어', spin: 1, mass: 0.055, radius: 0.0245, ik: 0.545, blades: 6,
       atk: 0.40, cmu: 0.16, rest: 0.28, bres: 1.45, batk: 0.8, wcrit: 120, air: 0.9, tip: 'ball',
-      c1: '#3fb37a', c2: '#a7f0c4', c3: '#0b3a24', glyph: 'hex',
+      c1: '#6a3fc2', c2: '#b690ff', c3: '#0f0818', acc: '#2ed3c6', gem: '#e0344c', ui: '#b074ff', glyph: 'hex',
       desc: '무겁고 둥근 몸통. 충격을 흘려 받고 가운데를 지킨다.' },
-    { id: 'spindle', move: '은하 소용돌이', name: '은하 물레', type: '지구력', spin: 1, mass: 0.047, radius: 0.026, ik: 0.53, blades: 2, shape: 'wing',
+    { id: 'spindle', move: '은하 소용돌이', name: '은하 물레', type: '지구력', spin: 1, mass: 0.047, radius: 0.026, ik: 0.53, blades: 2,
       atk: 0.40, cmu: 0.20, rest: 0.45, bres: 1.6, batk: 0.8, wcrit: 95, air: 0.95, tip: 'needle',
-      c1: '#a98bff', c2: '#e3d9ff', c3: '#2a1a66', glyph: 'star',
+      c1: '#d92d45', c2: '#ff8a9a', c3: '#4b0a14', acc: '#f6c453', gem: '#2f7bff', wing: '#2f7bff', ui: '#ff5a78', glyph: 'star',
       desc: '테가 무거운 날개 + 니들 축. 가운데서 끝까지 버틴다.' },
-    { id: 'wolf', move: '청람 송곳니 질주', name: '청람 늑대', type: '밸런스', spin: 1, mass: 0.051, radius: 0.025, ik: 0.6, blades: 4, shape: 'fang',
+    { id: 'wolf', move: '청람 송곳니 질주', name: '청람 늑대', type: '밸런스', spin: 1, mass: 0.051, radius: 0.025, ik: 0.6, blades: 4,
       atk: 0.9, cmu: 0.25, rest: 0.48, bres: 1.25, batk: 1.0, wcrit: 115, air: 1.0, tip: 'semi',
-      c1: '#2f8cff', c2: '#9fd4ff', c3: '#0a2a5c', glyph: 'fang',
+      c1: '#2f78ff', c2: '#9fd0ff', c3: '#0a2260', acc: '#ffd23f', gem: '#e0344c', ui: '#4aa8ff', glyph: 'fang',
       desc: '공격·방어·지구력 모두 고르게. 세미플랫 축.' },
-    { id: 'fox', move: '역풍 회오리', name: '역풍 여우', type: '흡수형', spin: -1, mass: 0.049, radius: 0.025, ik: 0.6, blades: 3, shape: 'swept',
+    { id: 'fox', move: '역풍 회오리', name: '역풍 여우', type: '흡수형', spin: -1, mass: 0.049, radius: 0.025, ik: 0.6, blades: 3,
       atk: 0.85, cmu: 0.42, rest: 0.45, bres: 1.5, batk: 1.0, wcrit: 110, air: 1.05, tip: 'ball',
-      c1: '#ffcf3a', c2: '#fff1b0', c3: '#6a4a00', glyph: 'tail',
+      c1: '#e0a81c', c2: '#fff0a0', c3: '#6a4a00', acc: '#2a3d94', gem: '#2fc77a', ui: '#ffd23f', glyph: 'tail',
       desc: '왼쪽으로 돈다. 오른회전과 맞닿으면 회전을 빼앗아 온다.' },
-    { id: 'rhino', move: '파쇄 돌격', name: '파쇄 코뿔소', type: '버스트형', spin: 1, mass: 0.053, radius: 0.0255, ik: 0.55, blades: 2, shape: 'horn',
+    { id: 'rhino', move: '파쇄 돌격', name: '파쇄 코뿔소', type: '버스트형', spin: 1, mass: 0.053, radius: 0.0255, ik: 0.55, blades: 2,
       atk: 1.2, cmu: 0.28, rest: 0.60, bres: 1.1, batk: 1.5, wcrit: 125, air: 1.1, tip: 'flat',
-      c1: '#c0c7d6', c2: '#ffffff', c3: '#2c3240', glyph: 'horn',
+      c1: '#c7ceda', c2: '#ffffff', c3: '#434b5e', acc: '#2f78ff', gem: '#2f9bff', mag: '#c0308a', ui: '#dfe6f2', glyph: 'horn',
       desc: '두 개의 뿔이 락을 비틀어 버스트를 노린다. 대신 자기도 잘 터진다.' },
   ];
   const byId = id => BEYS.find(b => b.id === id);
@@ -910,32 +910,6 @@ const Sound = (function () {
    ===================================================================== */
 const Art = (function () {
   const TAU = Math.PI * 2;
-  function bladePath(ctx, def) {
-    const n = def.blades, sh = def.shape;
-    ctx.beginPath();
-    for (let i = 0; i < n; i++) {
-      const a = i * TAU / n;
-      const P = (r, t) => [Math.cos(a + t) * r, Math.sin(a + t) * r];
-      const s = def.spin; // 날은 회전 방향을 향함
-      if (sh === 'hook') {
-        ctx.moveTo(...P(0.45, -0.55 * s)); ctx.lineTo(...P(0.92, -0.35 * s)); ctx.quadraticCurveTo(...P(1.08, 0.05 * s), ...P(0.98, 0.42 * s));
-        ctx.lineTo(...P(0.80, 0.18 * s)); ctx.lineTo(...P(0.55, 0.35 * s)); ctx.closePath();
-      } else if (sh === 'round') {
-        const [x, y] = P(0.82, 0); ctx.moveTo(x + 0.2, y); ctx.arc(x, y, 0.2, 0, TAU);
-      } else if (sh === 'wing') {
-        ctx.moveTo(...P(0.35, -0.9 * s)); ctx.quadraticCurveTo(...P(1.05, -0.7 * s), ...P(1.0, 0.1 * s));
-        ctx.quadraticCurveTo(...P(0.98, 0.55 * s), ...P(0.75, 0.75 * s)); ctx.lineTo(...P(0.4, 0.6 * s)); ctx.closePath();
-      } else if (sh === 'fang') {
-        ctx.moveTo(...P(0.5, -0.4 * s)); ctx.lineTo(...P(1.0, 0.0)); ctx.lineTo(...P(0.88, 0.22 * s)); ctx.lineTo(...P(0.62, 0.3 * s)); ctx.closePath();
-      } else if (sh === 'swept') {
-        ctx.moveTo(...P(0.45, 0.5 * s)); ctx.quadraticCurveTo(...P(0.95, 0.35 * s), ...P(1.02, -0.25 * s));
-        ctx.lineTo(...P(0.82, -0.1 * s)); ctx.quadraticCurveTo(...P(0.7, 0.2 * s), ...P(0.45, 0.05 * s)); ctx.closePath();
-      } else if (sh === 'horn') {
-        ctx.moveTo(...P(0.4, -0.75)); ctx.quadraticCurveTo(...P(0.9, -0.5), ...P(1.06, 0.12 * s)); ctx.lineTo(...P(0.86, 0.12 * s));
-        ctx.quadraticCurveTo(...P(0.75, 0.6), ...P(0.4, 0.75)); ctx.closePath();
-      }
-    }
-  }
   function glyph(ctx, g, c) {
     ctx.save(); ctx.fillStyle = c; ctx.strokeStyle = c; ctx.lineWidth = 0.05; ctx.beginPath();
     if (g === 'flame') { ctx.moveTo(0, -0.2); ctx.quadraticCurveTo(0.16, -0.02, 0.06, 0.16); ctx.quadraticCurveTo(0, 0.05, -0.08, 0.16); ctx.quadraticCurveTo(-0.16, -0.02, 0, -0.2); ctx.fill(); }
@@ -946,6 +920,137 @@ const Art = (function () {
     else if (g === 'horn') { ctx.moveTo(-0.15, 0.12); ctx.quadraticCurveTo(-0.05, -0.05, 0.12, -0.18); ctx.quadraticCurveTo(0.04, 0.05, 0.15, 0.12); ctx.closePath(); ctx.fill(); }
     ctx.restore();
   }
+  // ── 팽이 몸통 그림(위에서 본 모습, 반지름 1). 6종 모두 오리지널 도안 ──
+  const hexRGB = c => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16));
+  const shade = (c, t) => { const k = t < 0 ? 0 : 255, u = Math.abs(t); return '#' + hexRGB(c).map(v => Math.round(v + (k - v) * u).toString(16).padStart(2, '0')).join(''); };
+  const rad = (ctx, x, y, r, stops) => { const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.35, r * 0.05, x, y, r); stops.forEach(([o, c]) => g.addColorStop(o, c)); return g; };
+  const lin = (ctx, x0, y0, x1, y1, stops) => { const g = ctx.createLinearGradient(x0, y0, x1, y1); stops.forEach(([o, c]) => g.addColorStop(o, c)); return g; };
+  const dot = (ctx, x, y, r, fill) => { ctx.fillStyle = fill; ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill(); };
+  const ringS = (ctx, r, w, style) => { ctx.strokeStyle = style; ctx.lineWidth = w; ctx.beginPath(); ctx.arc(0, 0, r, 0, TAU); ctx.stroke(); };
+  const around = (ctx, n, fn) => { for (let i = 0; i < n; i++) { ctx.save(); ctx.rotate(i * TAU / n); fn(i); ctx.restore(); } };
+  // 현재 경로를 칠하고 어두운 바깥선 + 색 테두리를 긋는다
+  function paint(ctx, fill, trim, w = 0.035) {
+    ctx.fillStyle = fill; ctx.fill(); ctx.lineJoin = 'round';
+    ctx.strokeStyle = 'rgba(0,0,0,.65)'; ctx.lineWidth = w * 2; ctx.stroke();
+    if (trim) { ctx.strokeStyle = trim; ctx.lineWidth = w; ctx.stroke(); }
+  }
+  function gem(ctx, def, r, col) { // 가운데 보석(면·하이라이트·작은 문양)
+    dot(ctx, 0, 0, r * 1.2, 'rgba(0,0,0,.6)');
+    dot(ctx, 0, 0, r, rad(ctx, 0, 0, r, [[0, shade(col, 0.85)], [0.35, col], [1, shade(col, -0.6)]]));
+    ctx.strokeStyle = 'rgba(255,255,255,.28)'; ctx.lineWidth = r * 0.07;
+    for (let i = 0; i < 8; i++) { const a = i * TAU / 8 + 0.2; ctx.beginPath(); ctx.moveTo(Math.cos(a) * r * 0.32, Math.sin(a) * r * 0.32); ctx.lineTo(Math.cos(a) * r * 0.95, Math.sin(a) * r * 0.95); ctx.stroke(); }
+    ringS(ctx, r, r * 0.12, 'rgba(255,255,255,.55)');
+    ctx.save(); const k = r / 0.27; ctx.scale(k, k); glyph(ctx, def.glyph, 'rgba(255,255,255,.92)'); ctx.restore();
+    ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.beginPath(); ctx.ellipse(-r * 0.35, -r * 0.42, r * 0.22, r * 0.12, -0.6, 0, TAU); ctx.fill();
+  }
+  const ART = {
+    hawk(ctx, d) { // 홍염 매: 불꽃 소용돌이 날 3개 · 붉은 몸통 · 금테
+      around(ctx, 3, () => {
+        ctx.beginPath(); ctx.moveTo(0.36, -0.30);
+        ctx.bezierCurveTo(0.66, -0.68, 1.10, -0.42, 1.05, 0.08);
+        ctx.bezierCurveTo(1.00, 0.34, 0.84, 0.46, 0.68, 0.42);
+        ctx.bezierCurveTo(0.82, 0.28, 0.82, 0.06, 0.62, 0.0);
+        ctx.bezierCurveTo(0.60, 0.18, 0.54, 0.34, 0.34, 0.40); ctx.closePath();
+        paint(ctx, lin(ctx, 0.4, -0.5, 1.0, 0.4, [[0, d.c2], [0.45, d.c1], [1, d.c3]]), d.acc, 0.045);
+        ctx.strokeStyle = 'rgba(255,238,215,.9)'; ctx.lineWidth = 0.04; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(0.50, -0.12); ctx.quadraticCurveTo(0.80, -0.36, 0.95, -0.06); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0.70, 0.12); ctx.quadraticCurveTo(0.84, 0.16, 0.88, 0.28); ctx.stroke();
+      });
+      dot(ctx, 0, 0, 0.68, rad(ctx, 0, 0, 0.68, [[0, d.c2], [0.55, d.c1], [1, d.c3]]));
+      ringS(ctx, 0.68, 0.1, 'rgba(0,0,0,.6)'); ringS(ctx, 0.68, 0.05, d.acc);
+      ringS(ctx, 0.46, 0.035, 'rgba(0,0,0,.55)');
+      around(ctx, 3, () => { dot(ctx, 0.57, 0, 0.055, d.acc); dot(ctx, 0.57, 0, 0.025, d.c3); });
+      gem(ctx, d, 0.25, d.gem);
+    },
+    turtle(ctx, d) { // 강철 거북: 검보라 갑옷 · 가시 6개 · 청록 호
+      around(ctx, 6, () => {
+        ctx.beginPath(); ctx.moveTo(0.48, -0.26); ctx.quadraticCurveTo(0.86, -0.28, 1.06, 0.12); ctx.quadraticCurveTo(0.80, 0.08, 0.56, 0.30); ctx.closePath();
+        paint(ctx, lin(ctx, 0.5, -0.3, 1.0, 0.2, [[0, shade(d.c1, -0.3)], [0.55, d.c3], [1, '#05020a']]), d.c1, 0.03);
+        ctx.strokeStyle = d.c2; ctx.lineWidth = 0.022; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(0.58, -0.22); ctx.quadraticCurveTo(0.86, -0.24, 1.0, 0.09); ctx.stroke();
+      });
+      around(ctx, 6, () => { ctx.rotate(TAU / 12); ctx.strokeStyle = d.acc; ctx.lineWidth = 0.06; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(0, 0, 0.8, -0.17, 0.17); ctx.stroke(); });
+      dot(ctx, 0, 0, 0.68, rad(ctx, 0, 0, 0.68, [[0, shade(d.c1, -0.15)], [0.6, d.c3], [1, '#05020a']]));
+      ringS(ctx, 0.68, 0.1, 'rgba(0,0,0,.65)'); ringS(ctx, 0.68, 0.05, d.c1);
+      around(ctx, 12, () => dot(ctx, 0.54, 0, 0.03, d.c2));
+      ringS(ctx, 0.42, 0.03, 'rgba(0,0,0,.6)');
+      gem(ctx, d, 0.26, d.gem);
+    },
+    spindle(ctx, d) { // 은하 물레: 좌우 푸른 날개 · 위아래 붉은 연꼴 · 은빛 칼날
+      around(ctx, 2, () => {
+        ctx.beginPath(); ctx.moveTo(0.30, -0.46); ctx.bezierCurveTo(0.70, -0.62, 1.02, -0.44, 1.07, -0.04);
+        ctx.bezierCurveTo(1.02, 0.32, 0.70, 0.56, 0.30, 0.46); ctx.bezierCurveTo(0.58, 0.20, 0.58, -0.20, 0.30, -0.46); ctx.closePath();
+        paint(ctx, lin(ctx, 0.3, -0.5, 1.05, 0.4, [[0, '#d6ebff'], [0.45, d.wing], [1, shade(d.wing, -0.65)]]), 'rgba(255,255,255,.7)', 0.03);
+        ctx.strokeStyle = d.c1; ctx.lineWidth = 0.05; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(0.44, -0.46); ctx.bezierCurveTo(0.74, -0.56, 0.96, -0.40, 1.0, -0.08); ctx.stroke();
+      });
+      ctx.save(); ctx.rotate(Math.PI / 2);
+      around(ctx, 2, () => {
+        ctx.beginPath(); ctx.moveTo(0.26, -0.38); ctx.lineTo(1.03, 0); ctx.lineTo(0.26, 0.38); ctx.closePath();
+        paint(ctx, lin(ctx, 0.3, -0.3, 1.0, 0.3, [[0, d.c2], [0.5, d.c1], [1, d.c3]]), d.acc, 0.04);
+        ctx.beginPath(); ctx.moveTo(0.50, -0.075); ctx.lineTo(0.97, 0); ctx.lineTo(0.50, 0.075); ctx.closePath();
+        paint(ctx, lin(ctx, 0.5, -0.1, 0.97, 0.1, [[0, '#ffffff'], [0.5, '#aeb7c8'], [1, '#6c7488']]), null, 0.02);
+      });
+      ctx.restore();
+      dot(ctx, 0, 0, 0.62, rad(ctx, 0, 0, 0.62, [[0, '#2a3a7a'], [0.6, '#10183a'], [1, '#05081a']]));
+      ringS(ctx, 0.62, 0.1, 'rgba(0,0,0,.6)'); ringS(ctx, 0.62, 0.05, d.acc); ringS(ctx, 0.44, 0.03, 'rgba(255,255,255,.5)');
+      gem(ctx, d, 0.26, d.gem);
+    },
+    wolf(ctx, d) { // 청람 늑대: 푸른 깃털 날개 4장 · 노란 불꽃 날 · 반투명 고리
+      around(ctx, 4, () => {
+        ctx.beginPath(); ctx.moveTo(0.36, -0.34);
+        ctx.bezierCurveTo(0.62, -0.72, 1.04, -0.64, 1.07, -0.22); ctx.lineTo(0.88, -0.16);
+        ctx.bezierCurveTo(0.98, -0.04, 1.04, 0.12, 1.02, 0.22); ctx.lineTo(0.84, 0.22);
+        ctx.bezierCurveTo(0.88, 0.34, 0.86, 0.44, 0.78, 0.52); ctx.bezierCurveTo(0.60, 0.46, 0.46, 0.42, 0.36, 0.36); ctx.closePath();
+        paint(ctx, lin(ctx, 0.4, -0.6, 1.0, 0.4, [[0, d.c2], [0.45, d.c1], [1, d.c3]]), shade(d.c2, 0.3), 0.03);
+        ctx.beginPath(); ctx.moveTo(0.50, -0.09); ctx.quadraticCurveTo(0.80, -0.17, 1.0, 0.04); ctx.quadraticCurveTo(0.78, 0.11, 0.50, 0.13); ctx.closePath();
+        paint(ctx, lin(ctx, 0.5, -0.1, 1.0, 0.1, [[0, '#fff4b0'], [0.5, d.acc], [1, '#c98a00']]), null, 0.025);
+        ctx.strokeStyle = '#ff4d5e'; ctx.lineWidth = 0.035; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(0.46, -0.30); ctx.quadraticCurveTo(0.72, -0.50, 0.94, -0.42); ctx.stroke();
+      });
+      dot(ctx, 0, 0, 0.7, rad(ctx, 0, 0, 0.7, [[0, 'rgba(190,225,255,.95)'], [0.6, 'rgba(60,130,255,.9)'], [1, 'rgba(10,34,96,.95)']]));
+      ringS(ctx, 0.7, 0.1, 'rgba(0,0,0,.55)'); ringS(ctx, 0.7, 0.04, shade(d.c2, 0.4));
+      ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 0.05; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.arc(0, 0, 0.58, -2.6, -1.9); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 0, 0.58, 0.4, 0.9); ctx.stroke();
+      dot(ctx, 0, 0, 0.44, rad(ctx, 0, 0, 0.44, [[0, '#1f4fc0'], [1, '#08183f']])); ringS(ctx, 0.44, 0.04, d.acc);
+      gem(ctx, d, 0.26, d.gem);
+    },
+    fox(ctx, d) { // 역풍 여우: 금빛 몸통 · 곤색 휘어진 긴 날 3개 · 검은 톱니 고리 (왼회전은 좌우 반전)
+      around(ctx, 3, () => {
+        ctx.beginPath(); ctx.moveTo(0.40, -0.22); ctx.bezierCurveTo(0.70, -0.64, 1.06, -0.40, 1.10, 0.16);
+        ctx.bezierCurveTo(0.92, -0.02, 0.74, 0.0, 0.66, 0.22); ctx.bezierCurveTo(0.56, 0.30, 0.48, 0.26, 0.40, 0.20); ctx.closePath();
+        paint(ctx, lin(ctx, 0.4, -0.5, 1.1, 0.2, [[0, '#4a62c8'], [0.5, d.acc], [1, '#070b24']]), d.c2, 0.03);
+        ctx.strokeStyle = d.c1; ctx.lineWidth = 0.03; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(0.50, -0.20); ctx.bezierCurveTo(0.74, -0.46, 0.98, -0.30, 1.03, 0.06); ctx.stroke();
+      });
+      around(ctx, 12, () => dot(ctx, 0.68, 0, 0.085, shade(d.c1, -0.1)));
+      dot(ctx, 0, 0, 0.7, rad(ctx, 0, 0, 0.7, [[0, d.c2], [0.5, d.c1], [1, d.c3]]));
+      ringS(ctx, 0.7, 0.08, 'rgba(0,0,0,.55)');
+      ctx.fillStyle = '#12141c'; around(ctx, 18, () => ctx.fillRect(0.40, -0.035, 0.17, 0.07));
+      ringS(ctx, 0.4, 0.06, '#12141c'); ringS(ctx, 0.36, 0.03, d.c2);
+      gem(ctx, d, 0.24, d.gem);
+    },
+    rhino(ctx, d) { // 파쇄 코뿔소: 은빛 면 몸통 · 푸른 초승달 날개 2장 · 은빛 뿔 2개
+      ctx.save(); ctx.rotate(Math.PI / 2);
+      around(ctx, 2, () => {
+        ctx.beginPath(); ctx.moveTo(0.36, -0.26); ctx.lineTo(1.05, 0); ctx.lineTo(0.36, 0.26); ctx.closePath();
+        paint(ctx, lin(ctx, 0.4, -0.3, 1.0, 0.3, [[0, '#ffffff'], [0.5, d.c1], [1, d.c3]]), '#ffffff', 0.025);
+        ctx.strokeStyle = 'rgba(40,48,70,.55)'; ctx.lineWidth = 0.025; ctx.beginPath(); ctx.moveTo(0.42, 0); ctx.lineTo(1.0, 0); ctx.stroke();
+      });
+      ctx.restore();
+      around(ctx, 2, () => {
+        ctx.beginPath(); ctx.moveTo(0.30, -0.54); ctx.bezierCurveTo(0.96, -0.70, 1.12, -0.10, 1.02, 0.34);
+        ctx.bezierCurveTo(0.84, 0.10, 0.60, -0.04, 0.32, -0.08); ctx.closePath();
+        paint(ctx, lin(ctx, 0.3, -0.6, 1.1, 0.3, [[0, '#cfe4ff'], [0.4, d.acc], [1, '#0a2a80']]), 'rgba(255,255,255,.75)', 0.03);
+        ctx.strokeStyle = d.mag; ctx.lineWidth = 0.05; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(0.50, -0.06); ctx.bezierCurveTo(0.70, 0.0, 0.90, 0.14, 0.98, 0.28); ctx.stroke();
+      });
+      dot(ctx, 0, 0, 0.7, d.c3);
+      around(ctx, 8, i => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, 0.7, -TAU / 16, TAU / 16); ctx.closePath(); ctx.fillStyle = i % 2 ? d.c2 : shade(d.c1, -0.18); ctx.fill(); });
+      ringS(ctx, 0.7, 0.1, 'rgba(0,0,0,.6)'); ringS(ctx, 0.7, 0.04, '#ffffff'); ringS(ctx, 0.46, 0.03, 'rgba(0,0,0,.5)');
+      gem(ctx, d, 0.26, d.gem);
+    },
+  };
   // 정지 상태의 팽이(위에서 본 모습). 단위원 기준.
   function drawBey(ctx, def, parts = { layer: true, disc: true, driver: true }) {
     ctx.save();
@@ -956,22 +1061,7 @@ const Art = (function () {
       ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 0.03; ctx.stroke();
       for (let i = 0; i < 12; i++) { const a = i * TAU / 12; ctx.fillStyle = 'rgba(30,34,45,.6)'; ctx.beginPath(); ctx.arc(Math.cos(a) * 0.68, Math.sin(a) * 0.68, 0.035, 0, TAU); ctx.fill(); }
     }
-    if (parts.layer) {
-      const g = ctx.createRadialGradient(-0.25, -0.3, 0.05, 0, 0, 1.05);
-      g.addColorStop(0, def.c2); g.addColorStop(0.55, def.c1); g.addColorStop(1, def.c3);
-      ctx.fillStyle = g; bladePath(ctx, def); ctx.fill();
-      ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.lineWidth = 0.035; ctx.stroke();
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 0.56, 0, TAU); ctx.fill(); ctx.stroke();
-      ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 0.025; ctx.beginPath(); ctx.arc(0, 0, 0.47, 0, TAU); ctx.stroke();
-      // 비대칭 표식(회전이 느릴 때 보임)
-      ctx.fillStyle = def.c3; ctx.beginPath(); ctx.moveTo(0.3, -0.06); ctx.lineTo(0.52, 0); ctx.lineTo(0.3, 0.06); ctx.fill();
-      // 가운데 칩
-      const cg = ctx.createRadialGradient(-0.06, -0.08, 0.01, 0, 0, 0.28);
-      cg.addColorStop(0, '#ffffff'); cg.addColorStop(0.35, def.c2); cg.addColorStop(1, def.c3);
-      ctx.fillStyle = cg; ctx.beginPath(); ctx.arc(0, 0, 0.27, 0, TAU); ctx.fill();
-      ctx.strokeStyle = 'rgba(0,0,0,.5)'; ctx.lineWidth = 0.03; ctx.stroke();
-      glyph(ctx, def.glyph, def.c3);
-    }
+    if (parts.layer) { ctx.save(); if (def.spin < 0) ctx.scale(-1, 1); ART[def.id](ctx, def); ctx.restore(); } // 왼회전은 좌우 반전
     if (parts.driver && !parts.layer && !parts.disc) {
       ctx.fillStyle = '#20242e'; ctx.beginPath(); ctx.arc(0, 0, 0.9, 0, TAU); ctx.fill();
       ctx.fillStyle = def.c1; ctx.beginPath(); ctx.arc(0, 0, 0.6, 0, TAU); ctx.fill();
@@ -1159,7 +1249,7 @@ const Game = (function () {
       const cvs = document.createElement('canvas'); cvs.width = cvs.height = 144;
       b.appendChild(cvs);
       const info = document.createElement('div'); info.style.minWidth = '0'; info.style.flex = '1';
-      info.innerHTML = `<div class="nm" style="color:${def.c1}">${def.name}</div><div class="ty">${def.type} · ${def.spin > 0 ? '오른회전' : '왼회전'} · ${tip.name} 축</div>
+      info.innerHTML = `<div class="nm" style="color:${def.ui}">${def.name}</div><div class="ty">${def.type} · ${def.spin > 0 ? '오른회전' : '왼회전'} · ${tip.name} 축</div>
         <div class="stats">${stats.map(([n, v]) => `<span>${n}</span><span class="bar"><i style="width:${Math.round(Math.min(1, v) * 100)}%"></i></span>`).join('')}</div>
         <div class="ds">${def.desc}</div>`;
       b.appendChild(info);
@@ -1387,8 +1477,10 @@ const Game = (function () {
     flashAt(ev.x, ev.y, 0.03 + 0.05 * p, 0.22);
     ring(ev.x, ev.y, 0.05 + 0.05 * p, 'rgba(255,220,140,', 0.35);
     S.flash = Math.max(S.flash, 0.15 + 0.3 * p); Sound.impact(p, pan);
-    S.combo.n = S.wall - S.combo.t < 1.6 ? S.combo.n + 1 : 1; S.combo.t = S.wall;
-    const word = S.combo.n >= 3 ? `${S.combo.n}연타!!` : p > 0.85 ? '초강타!!' : p > 0.65 ? '콰광!' : '쾅!';
+    if (S.wall - S.combo.t >= 1.6) { S.combo.n = 1; S.combo.inc = S.wall; } // 1.6초 안에 이어진 강타만 연타. 붙어서 계속 부딪히는 건 0.3초에 1번만 셈
+    else if (S.wall - S.combo.inc > 0.3) { S.combo.n++; S.combo.inc = S.wall; }
+    S.combo.t = S.wall;
+    const word = S.combo.n >= 3 ? `${Math.min(S.combo.n, 9)}${S.combo.n > 9 ? '+' : ''}연타!!` : p > 0.85 ? '초강타!!' : p > 0.65 ? '콰광!' : '쾅!';
     if (S.wall - (S.lastWord || -9) > 0.45) { S.lastWord = S.wall; floatText(ev.x, ev.y - 0.03, word, S.combo.n >= 3 ? '#ff7a3c' : '#fff3b0', 20 + 20 * p); } // 4체가 엉키면 글자가 겹치므로 간격 제한
     if (p > 0.7 && !S.world.pending) slow(0.35, 0.3);
   }
