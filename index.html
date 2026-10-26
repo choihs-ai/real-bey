@@ -260,7 +260,7 @@ const TUNE = {
   TILT_KICK: 0.010,       // 충돌 시 기울어짐(지렛대 길이 m)
 
   // ── 충돌 ──
-  SMASH: 0.0547,           // 날 회전 → 타격 변환 비율(공격력)
+  SMASH: 0.0401,           // 날 회전 → 타격 변환 비율(공격력)
   SMASH_EXP: 0.3,         // 표면속도에 대한 민감도(낮추면 초반·후반 타격 차이가 줄어듦)
   COUNTER_SMASH: 0.35,    // 반대 회전끼리도 이 비율만큼은 날이 걸려 튕김(0이면 왼회전이 너무 셈)
   SMASH_CD: 0.07,         // 같은 접촉에서 타격 재발생 간격
@@ -271,7 +271,7 @@ const TUNE = {
   // ── 버스트 ──
   BURST_N: 1.0,           // 정면 충격 → 버스트 데미지
   BURST_T: 0.55,          // 회전 반대로 비트는 충격 → 버스트 데미지
-  BURST_GAIN: 0.0177,       // 문턱을 넘은 데미지가 게이지로 쌓이는 비율
+  BURST_GAIN: 0.0191,       // 문턱을 넘은 데미지가 게이지로 쌓이는 비율
   BURST_LOCK_MIN: 0.12,   // 회전이 느려지면 락이 약해짐(최소 비율)
   BURST_LOCK_W: 650,      // 이 각속도 이상이면 락 최대
   BURST_LOCK_POW: 2,    // 락이 약해지는 곡선
@@ -378,37 +378,37 @@ const Core = (function () {
     { id: 'spriggan', move: '레전드 머지', name: '레전드 스프리건', en: 'Legend Spriggan', no: 'B-86', type: '밸런스', spin: 1, dual: true,
       parts: { layer: '레전드 스프리건', disc: '7 (세븐)', driver: '머지 (Mr)' }, wt: 43.4,
       mass: 0.0505, radius: 0.025, ik: 0.6, blades: 4,
-      atk: 0.84, cmu: 0.259, rest: 0.48, bres: 1.676, batk: 0.686, wcrit: 92, air: 1.0, tip: 'semi',
+      atk: 1.013, cmu: 0.255, rest: 0.48, bres: 1.765, batk: 0.68, wcrit: 94, air: 1.0, tip: 'semi',
       c1: '#d8281c', c2: '#ff8a5c', c3: '#4a0806', acc: '#f6c453', gem: '#35b6ff', ui: '#ff7a2e', glyph: 'flame',
       desc: '밸런스 타입. 오른회전(레이어)·왼회전(갓 레이어) 겸용 듀얼 스핀. 공·수·지를 고르게.' },
     { id: 'bahamut', move: '아크 바하무트', name: '아크 바하무트', en: 'Arc Bahamut', no: 'B-98', type: '방어', spin: -1,
       parts: { layer: '아크 바하무트', disc: '2범프 (2Bump)', driver: '아토믹 (At)' }, wt: 44.59,
       mass: 0.0518, radius: 0.0245, ik: 0.545, blades: 6,
-      atk: 0.348, cmu: 0.194, rest: 0.28, bres: 1.483, batk: 1.199, wcrit: 120, air: 0.9, tip: 'ball',
+      atk: 0.399, cmu: 0.184, rest: 0.28, bres: 1.483, batk: 1.573, wcrit: 120, air: 0.9, tip: 'ball',
       c1: '#6a3fc2', c2: '#b690ff', c3: '#0f0818', acc: '#2ed3c6', gem: '#e0344c', ui: '#b074ff', glyph: 'hex',
       desc: '디펜스 타입. 왼회전, 무거운 6날 레이어. 오른회전과의 충돌에 강하다.' },
     { id: 'excalibur', move: '지크 엑스칼리버', name: '지크 엑스칼리버', en: 'Sieg Xcalibur', no: 'B-92', type: '공격', spin: 1,
       parts: { layer: '지크 엑스칼리버', disc: '1', driver: '아이언 (Ir)' }, wt: 44.21,
       mass: 0.0514, radius: 0.025, ik: 0.56, blades: 3,
-      atk: 2.041, cmu: 0.337, rest: 0.55, bres: 1.632, batk: 1.0, wcrit: 158, air: 1.15, tip: 'flat',
+      atk: 2.176, cmu: 0.386, rest: 0.55, bres: 1.48, batk: 0.884, wcrit: 166, air: 1.15, tip: 'flat',
       c1: '#d92d45', c2: '#ff8a9a', c3: '#4b0a14', acc: '#f6c453', gem: '#2f7bff', wing: '#2f7bff', ui: '#ff5a78', glyph: 'star',
       desc: '어택 타입. 금속 검 날이 튀어나온 오른회전. 베어내듯 강타한다.' },
     { id: 'valkyrie', move: '갓 발키리', name: '갓 발키리', en: 'God Valkyrie', no: 'B-73', type: '공격', spin: 1,
       parts: { layer: '갓 발키리', disc: '6 + 보텍스 (6V)', driver: '리부트 (Rb)' }, wt: 41.94,
       mass: 0.0488, radius: 0.025, ik: 0.6, blades: 4,
-      atk: 1.175, cmu: 0.194, rest: 0.52, bres: 1.249, batk: 1.084, wcrit: 121, air: 1.05, tip: 'semi',
+      atk: 1.28, cmu: 0.195, rest: 0.52, bres: 1.301, batk: 1.11, wcrit: 122, air: 1.05, tip: 'semi',
       c1: '#2f78ff', c2: '#9fd0ff', c3: '#0a2260', acc: '#ffd23f', gem: '#e0344c', ui: '#4aa8ff', glyph: 'fang',
       desc: '어택 타입. 용수철 날개를 가진 오른회전. 리부트 축이 후반에 폭발적으로 달린다.' },
     { id: 'fafnir', move: '드레인 파브닐', name: '드레인 파브닐', en: 'Drain Fafnir', no: 'B-79', type: '지구력', spin: -1,
       parts: { layer: '드레인 파브닐', disc: '8 (포지 디스크)', driver: '낫싱 (Nt)' }, wt: 41.1,
       mass: 0.0478, radius: 0.025, ik: 0.6, blades: 3,
-      atk: 0.934, cmu: 0.434, rest: 0.45, bres: 1.505, batk: 0.865, wcrit: 87, air: 1.05, tip: 'ball',
+      atk: 1.105, cmu: 0.224, rest: 0.45, bres: 1.574, batk: 0.847, wcrit: 90, air: 1.05, tip: 'ball',
       c1: '#e0a81c', c2: '#fff0a0', c3: '#6a4a00', acc: '#2a3d94', gem: '#2fc77a', ui: '#ffd23f', glyph: 'tail',
       desc: '스태미나 타입. 왼회전, 고무 F 날이 오른회전 상대의 회전을 빨아들인다.' },
     { id: 'longinus', move: '나이트메어 롱기누스', name: '나이트메어 롱기누스', en: 'Nightmare Longinus', no: 'B-97', type: '공격', spin: -1,
       parts: { layer: '나이트메어 롱기누스', disc: '디스크 일체형', driver: '디스트로이 (Ds)' }, wt: null,
       mass: 0.053, radius: 0.0255, ik: 0.55, blades: 2,
-      atk: 1.299, cmu: 0.168, rest: 0.60, bres: 1.042, batk: 1.45, wcrit: 109, air: 1.1, tip: 'flat',
+      atk: 1.453, cmu: 0.094, rest: 0.60, bres: 0.982, batk: 1.57, wcrit: 136, air: 1.1, tip: 'flat',
       c1: '#c7ceda', c2: '#ffffff', c3: '#434b5e', acc: '#2f78ff', gem: '#2f9bff', mag: '#c0308a', ui: '#dfe6f2', glyph: 'horn',
       desc: '어택 타입. 왼회전, 금속 용머리 4개가 달린 무거운 레이어. 락을 비틀어 버스트를 노린다.' },
   ];
