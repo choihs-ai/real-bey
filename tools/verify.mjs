@@ -23,12 +23,12 @@ for (const [name, w, h] of shots) {
   await q.click('[data-mode="2p"]'); await q.waitForTimeout(200);
   await q.screenshot({ path: path.join(out, `${name}-select.png`) });
   // 화면 확인용: 메뉴에는 없는 숨은 경로(AI끼리)로 판을 돌려 전투 장면을 찍는다
-  await q.evaluate(() => { Game.S.mode = 'watch'; Game.S.picks = ['hawk', 'fox']; Game.startMatch(); });
+  await q.evaluate(() => { Game.S.mode = 'watch'; Game.S.picks = ['spriggan', 'fafnir']; Game.startMatch(); });
   await q.waitForTimeout(5500); await q.screenshot({ path: path.join(out, `${name}-battle.png`) });
   await q.evaluate(() => { Game.S.phase = 'menu'; Game.S.n = 2; });
   await q.reload(); await q.waitForTimeout(300);
   await q.click('[data-mode="ffa"]');
-  for (const id of ['hawk', 'turtle', 'spindle', 'rhino']) { await q.click(`.card[data-id="${id}"]`); await q.click('#selOk'); }
+  for (const id of ['spriggan', 'bahamut', 'excalibur', 'longinus']) { await q.click(`.card[data-id="${id}"]`); await q.click('#selOk'); }
   await q.waitForTimeout(400); await q.screenshot({ path: path.join(out, `${name}-ffa-ready.png`) });
   await ctx.close();
 }
